@@ -29,6 +29,11 @@
 			path = "Group_4-ANSD_App";
 			sourceTree = "<group>";
 		};
+		02B4CC8E2ED6CEAE00E34F2A /* Home Screen */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Home Screen";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +50,7 @@
 		02B4CC6D2ED6C6CC00E34F2A = {
 			isa = PBXGroup;
 			children = (
+				02B4CC8E2ED6CEAE00E34F2A /* Home Screen */,
 				02B4CC782ED6C6CC00E34F2A /* Group_4-ANSD_App */,
 				02B4CC772ED6C6CC00E34F2A /* Products */,
 			);
@@ -75,6 +81,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				02B4CC782ED6C6CC00E34F2A /* Group_4-ANSD_App */,
+				02B4CC8E2ED6CEAE00E34F2A /* Home Screen */,
 			);
 			name = "Group_4-ANSD_App";
 			packageProductDependencies = (

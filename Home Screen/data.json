@@ -1,0 +1,45 @@
+{
+  "routine_conversations": [
+    {
+      "id": "office_checkin_1",
+      "iconName": "message.fill",
+      "categoryTitle": "Office",
+      "status": "Upcoming",
+      "conversationTopic": "Daily Check-In",
+      "timeRange": "09:30 - 10:30 AM"
+    },
+    {
+      "id": "family_dinner_2",
+      "iconName": "figure.2.and.child.holdinghands",
+      "categoryTitle": "Family",
+      "status": "Scheduled",
+      "conversationTopic": "Dinner",
+      "timeRange": "09:30 - 10:30 PM"
+    },
+    {
+      "id": "friends_cafeteria_3",
+      "iconName": "person.3.fill",
+      "categoryTitle": "Friends",
+      "status": "Scheduled",
+      "conversationTopic": "Cafeteria",
+      "timeRange": "12:30 - 01:30 PM"
+    },
+    {
+      "id": "team_meeting_4",
+      "iconName": "briefcase.fill",
+      "categoryTitle": "Team",
+      "status": "Upcoming",
+      "conversationTopic": "Project Sync",
+      "timeRange": "02:00 - 03:00 PM"
+    },
+    {
+      "id": "personal_call_5",
+      "iconName": "heart.fill",
+      "categoryTitle": "Personal",
+      "status": "Scheduled",
+      "conversationTopic": "Therapy Session",
+      "timeRange": "05:00 - 06:00 PM"
+    }
+  ],
+  "total_count": 5
+}

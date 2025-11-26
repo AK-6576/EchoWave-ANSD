@@ -1,0 +1,56 @@
+{
+  "conversations": [
+    {
+      "id": "conv_1",
+      "title": "Daily Check-In",
+      "description": "Discussed Serum X's medical applications.",
+      "date": "2025-10-05",
+      "start_time": "11:30 AM",
+      "end_time": "12:30 PM",
+      "category": "office",
+      "icon": "office_icon",
+      "info": false
+    },
+    {
+      "id": "conv_2",
+      "title": "Marvel Theories",
+      "description": "Discussed Avengers Doomsday and the consequences.",
+      "date": "2025-10-04",
+      "start_time": "10:30 PM",
+      "end_time": "11:30 PM",
+      "category": "friends",
+      "icon": "friends_icon",
+      "info": true
+    },
+    {
+      "id": "conv_3",
+      "title": "Movie Night",
+      "description": "Discussed whether to see The Mandalorian movie.",
+      "date": "2025-10-05",
+      "start_time": "09:30 AM",
+      "end_time": "10:30 AM",
+      "category": "family",
+      "icon": "family_icon",
+      "info": false
+    }
+  ],
+  "previous_months": [
+    {
+      "month": "September",
+      "conversations": [
+        {
+          "id": "conv_4",
+          "title": "Conversation 1",
+          "description": "Sample discussion for September.",
+          "date": "2025-09-25",
+          "start_time": "02:00 PM",
+          "end_time": "03:00 PM",
+          "category": "general",
+          "icon": "general_icon",
+          "info": false
+        }
+      ]
+    }
+  ]
+}
+

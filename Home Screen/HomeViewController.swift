@@ -7,13 +7,12 @@
 
 import UIKit
 
-// MARK: - 1. New Header View Class
-// (You can put this here or in a separate file named SectionHeaderView.swift)
 class SectionHeaderView: UICollectionReusableView {
     static let reuseIdentifier = "SectionHeaderView"
 
     let titleLabel = UILabel()
-    let detailLabel = UILabel() // For the "3 >" or "10 >"
+    let countLabel = UILabel()
+    let chevronImageView = UIImageView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,30 +24,47 @@ class SectionHeaderView: UICollectionReusableView {
     }
 
     private func setupView() {
-        addSubview(titleLabel)
-        addSubview(detailLabel)
-
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        detailLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        // Styling
-        titleLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        titleLabel.textColor = .label
-
-        detailLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-        detailLabel.textColor = .secondaryLabel
-
-        // Constraints
-        NSLayoutConstraint.activate([
-            // Title on the left
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0), // Aligned with cell content
-            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            // --- 1. IMPORTANT: Set Background Color ---
+            // Without this, scrolling cells will show through the text!
+            self.backgroundColor = .systemBackground
             
-            // Detail on the right
-            detailLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
-            detailLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
-        ])
-    }
+            addSubview(titleLabel)
+            addSubview(countLabel)
+            addSubview(chevronImageView)
+
+            titleLabel.translatesAutoresizingMaskIntoConstraints = false
+            countLabel.translatesAutoresizingMaskIntoConstraints = false
+            chevronImageView.translatesAutoresizingMaskIntoConstraints = false
+
+            // --- Styling ---
+            titleLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+            titleLabel.textColor = .label
+
+            countLabel.font = UIFont.systemFont(ofSize: 15, weight: .medium)
+            countLabel.textColor = .secondaryLabel
+            countLabel.textAlignment = .right
+
+            let config = UIImage.SymbolConfiguration(pointSize: 14, weight: .semibold)
+            chevronImageView.image = UIImage(systemName: "chevron.right", withConfiguration: config)
+            chevronImageView.tintColor = .tertiaryLabel
+            chevronImageView.contentMode = .scaleAspectFit
+
+            // --- Constraints ---
+            NSLayoutConstraint.activate([
+                titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+                titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+                
+                chevronImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+                chevronImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+                chevronImageView.widthAnchor.constraint(equalToConstant: 12),
+                chevronImageView.heightAnchor.constraint(equalToConstant: 20),
+
+                countLabel.trailingAnchor.constraint(equalTo: chevronImageView.leadingAnchor, constant: -6),
+                countLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+                
+                titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: countLabel.leadingAnchor, constant: -8)
+            ])
+        }
 }
 
 // Define the data model (Outside the class, or in its own file)
@@ -131,8 +147,7 @@ class HomeViewController: UIViewController {
             }
         }
     }
-
-    // MARK: - DataSource & Delegate
+// MARK: - DataSource & Delegate
     extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate {
         
         func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -146,7 +161,7 @@ class HomeViewController: UIViewController {
             case .routineConversations:
                 return routineItems.count
             case .viewConversations:
-                return viewItems.count // <--- Use real count from JSON
+                return viewItems.count
             }
         }
         
@@ -163,16 +178,14 @@ class HomeViewController: UIViewController {
                 return cell
                 
             case .viewConversations:
-                // reuseIdentifier should match what you set in XIB and register
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "viewCell", for: indexPath) as! ViewCell
-                
-                let item = viewItems[indexPath.item] // <--- Get Item
-                cell.configure(with: item)           // <--- Configure Cell
-                
+                let item = viewItems[indexPath.item]
+                cell.configure(with: item)
                 return cell
             }
         }
         
+        // --- FIX IS HERE ---
         func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
             
             guard kind == UICollectionView.elementKindSectionHeader else {
@@ -191,11 +204,13 @@ class HomeViewController: UIViewController {
             switch sectionType {
             case .routineConversations:
                 headerView.titleLabel.text = "Routine Conversations"
-                headerView.detailLabel.text = "\(routineItems.count) >"
+                // FIX: Use .countLabel, and remove the " >" string (the image handles it now)
+                headerView.countLabel.text = "\(routineItems.count)"
+                
             case .viewConversations:
                 headerView.titleLabel.text = "View Conversations"
-                // Show real count from JSON
-                headerView.detailLabel.text = "\(viewItems.count) >"
+                // FIX: Use .countLabel, and remove the " >" string
+                headerView.countLabel.text = "\(viewItems.count)"
             }
             
             return headerView
@@ -253,35 +268,40 @@ class HomeViewController: UIViewController {
         }
         
         private func createViewConversationsLayout() -> NSCollectionLayoutSection {
-            let itemSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0)
-            )
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            
-            // NOTE: Adjusted height to 140 to fit more content (Date/Time/Tags)
-            // You can change this back to 100 if you prefer smaller cards.
-            let groupSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .absolute(140)
-            )
-            let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-            
-            let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = 12
-            section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 20, bottom: 20, trailing: 20)
-            
-            let headerSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .absolute(44)
-            )
-            let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: headerSize,
-                elementKind: UICollectionView.elementKindSectionHeader,
-                alignment: .top
-            )
-            section.boundarySupplementaryItems = [sectionHeader]
-            
-            return section
-        }
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .fractionalHeight(1.0)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                // Height 140 for the vertical list items
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(140)
+                )
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.interGroupSpacing = 12
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 20, bottom: 20, trailing: 20)
+                
+                // --- Header Configuration ---
+                let headerSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(44)
+                )
+                let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: headerSize,
+                    elementKind: UICollectionView.elementKindSectionHeader,
+                    alignment: .top
+                )
+                
+                // --- THIS MAKES THE HEADER STICKY ---
+                sectionHeader.pinToVisibleBounds = true
+                sectionHeader.zIndex = 2 // Ensures header stays ON TOP of the scrolling cells
+                
+                section.boundarySupplementaryItems = [sectionHeader]
+                
+                return section
+            }
     }

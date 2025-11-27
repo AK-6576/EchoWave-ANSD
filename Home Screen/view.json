@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "title": "Daily Check-In",
+    "description": "Discussed Serum X's medical applications and potential side effects with the research team.",
+    "date": "Oct 5, 2025",
+    "timeRange": "11:30 - 12:30 PM",
+    "tag": "Office",
+    "tagIconName": "building.2.fill"
+  },
+  {
+    "id": "2",
+    "title": "Quick Captioning",
+    "description": "Captured a quick conversation about the grocery list and dinner plans.",
+    "date": "Oct 6, 2025",
+    "timeRange": "06:15 - 06:20 PM",
+    "tag": "Personal",
+    "tagIconName": "person.fill"
+  },
+  {
+    "id": "3",
+    "title": "Weekly Sync",
+    "description": "Reviewing the sprint progress for the mobile application development.",
+    "date": "Oct 7, 2025",
+    "timeRange": "10:00 - 11:00 AM",
+    "tag": null,
+    "tagIconName": null
+  },
+  {
+    "id": "4",
+    "title": "Doctor Appointment",
+    "description": "Consultation regarding the annual physical checkup and blood work results.",
+    "date": "Oct 8, 2025",
+    "timeRange": "02:00 - 03:15 PM",
+    "tag": "Health",
+    "tagIconName": "heart.fill"
+  },
+  {
+    "id": "5",
+    "title": "Client Meeting",
+    "description": "Introductory call with the new clients from New York to discuss project requirements.",
+    "date": "Oct 9, 2025",
+    "timeRange": "09:00 - 09:45 AM",
+    "tag": "Work",
+    "tagIconName": "briefcase.fill"
+  }
+]

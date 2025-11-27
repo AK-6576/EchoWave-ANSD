@@ -6,7 +6,9 @@
       "categoryTitle": "Office",
       "status": "Upcoming",
       "conversationTopic": "Daily Check-In",
-      "timeRange": "09:30 - 10:30 AM"
+      "timeRange": "09:30 - 10:30 AM",
+      "topicImage":"rectangle.and.pencil.and.ellipsis",
+      "timeImage":"clock"
     },
     {
       "id": "family_dinner_2",
@@ -14,15 +16,19 @@
       "categoryTitle": "Family",
       "status": "Scheduled",
       "conversationTopic": "Dinner",
-      "timeRange": "09:30 - 10:30 PM"
+      "timeRange": "07:00 - 08:30 PM",
+      "topicImage":"rectangle.and.pencil.and.ellipsis",
+      "timeImage":"clock"
     },
     {
       "id": "friends_cafeteria_3",
       "iconName": "person.3.fill",
       "categoryTitle": "Friends",
       "status": "Scheduled",
-      "conversationTopic": "Cafeteria",
-      "timeRange": "12:30 - 01:30 PM"
+      "conversationTopic": "Cafeteria Hangout",
+      "timeRange": "12:30 - 01:30 PM",
+      "topicImage":"rectangle.and.pencil.and.ellipsis",
+      "timeImage":"clock"
     },
     {
       "id": "team_meeting_4",
@@ -30,15 +36,19 @@
       "categoryTitle": "Team",
       "status": "Upcoming",
       "conversationTopic": "Project Sync",
-      "timeRange": "02:00 - 03:00 PM"
+      "timeRange": "02:00 - 03:00 PM",
+      "topicImage":"rectangle.and.pencil.and.ellipsis",
+      "timeImage":"clock"
     },
     {
-      "id": "personal_call_5",
+      "id": "personal_therapy_5",
       "iconName": "heart.fill",
       "categoryTitle": "Personal",
       "status": "Scheduled",
       "conversationTopic": "Therapy Session",
-      "timeRange": "05:00 - 06:00 PM"
+      "timeRange": "05:00 - 06:00 PM",
+      "topicImage":"rectangle.and.pencil.and.ellipsis",
+      "timeImage":"clock"
     }
   ],
   "total_count": 5

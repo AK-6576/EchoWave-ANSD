@@ -7,27 +7,25 @@
 
 import UIKit
 
-// MARK: - 1. Protocols & Data Models
+// MARK: - Protocol for Auto-Resizing Notes
 protocol NotesCardCellDelegate: AnyObject {
     func didUpdateText(in cell: NotesCardCell)
 }
 
-// MARK: - 2. Shared Helper for Styling
+// MARK: - Helper for Card Styling
 private func styleCard(view: UIView?) {
     guard let card = view else { return }
     card.layer.cornerRadius = 12
     card.backgroundColor = .white
-    
-    // Shadow Styling
+    // Shadow matching Figma soft look
     card.layer.shadowColor = UIColor.black.cgColor
     card.layer.shadowOpacity = 0.05
     card.layer.shadowOffset = CGSize(width: 0, height: 2)
     card.layer.shadowRadius = 4
 }
 
-// MARK: - 3. Header Cells
-
-// Used for "Conversation Summary" and "Notes"
+// MARK: - 1. Section Header Cell
+// Use this for "Conversation Summary" and "Notes"
 class SummarySectionHeaderCell: UITableViewCell {
     @IBOutlet weak var headerIcon: UIImageView!
     @IBOutlet weak var headerLabel: UILabel!
@@ -39,9 +37,25 @@ class SummarySectionHeaderCell: UITableViewCell {
     }
 }
 
-// Used for "Participants Summary"
+// MARK: - 2. Conversation Card Cell
+class SummaryCardCell: UITableViewCell {
+    @IBOutlet weak var mainCardView: UIView!
+    @IBOutlet weak var titleLabel: UILabel!
+    
+
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var locationLabel: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.backgroundColor = .clear
+        styleCard(view: mainCardView)
+    }
+}
+
+// MARK: - 3. Participants Header Cell
 class ParticipantsSummaryHeaderCell: UITableViewCell {
-    @IBOutlet weak var participantIcon: UIImageView!
+    @IBOutlet weak var participantIcon: UIImageView! // Optional, if you have an icon
     @IBOutlet weak var participantLabel: UILabel!
     
     override func awakeFromNib() {
@@ -51,52 +65,31 @@ class ParticipantsSummaryHeaderCell: UITableViewCell {
     }
 }
 
-// MARK: - 4. Content Cards
-
-// Conversation Details Card
-class SummaryCardCell: UITableViewCell {
-    @IBOutlet weak var mainCardView: UIView!
-    @IBOutlet weak var titleLabel: UILabel!
-    
-    // --- RESTORED TO PREVENT CRASH ---
-    // Even if you don't use them, these must exist if Storyboard is connected
-    @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var locationLabel: UILabel!
-    // ---------------------------------
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        self.backgroundColor = .clear
-        styleCard(view: mainCardView)
-    }
-}
-
-// Participant Details Card (Dynamic)
+// MARK: - 4. Participant Detail Card (Dynamic)
 class ParticipantCardCell: UITableViewCell {
+    
     @IBOutlet weak var mainCardView: UIView!
-    @IBOutlet weak var avatarCircle: UIView!
+    @IBOutlet weak var avatarImageView: UIImageView! // Changed from UIView to UIImageView
     @IBOutlet weak var detailsLabel: UILabel!
-    @IBOutlet weak var initialsLabel: UILabel! // Make sure this is connected!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         self.backgroundColor = .clear
         styleCard(view: mainCardView)
         
-        avatarCircle.layer.cornerRadius = 4
-        avatarCircle.clipsToBounds = true
+        // Style the Avatar Image
+        avatarImageView.layer.cornerRadius = 4 // Rounded square like Figma
+        avatarImageView.clipsToBounds = true
+        avatarImageView.tintColor = .systemGray // Makes the SF Symbol grey
     }
     
     func configure(with data: ParticipantData) {
-        // Safe check in case label isn't connected yet
-        if let label = initialsLabel {
-            label.text = data.initials
-        }
+        // We only set the summary text now
         detailsLabel.text = data.summary
     }
 }
 
-// Notes Input Card (Interactive)
+// MARK: - 5. Notes Input Card (Real-time Typing)
 class NotesCardCell: UITableViewCell, UITextViewDelegate {
     
     @IBOutlet weak var mainCardView: UIView!
@@ -110,21 +103,23 @@ class NotesCardCell: UITableViewCell, UITextViewDelegate {
         self.backgroundColor = .clear
         styleCard(view: mainCardView)
         
+        // Setup Text View
         notesTextView.delegate = self
         notesTextView.text = placeholderText
         notesTextView.textColor = .lightGray
         notesTextView.font = UIFont.systemFont(ofSize: 15)
         
-        // CRITICAL: Disabling scroll allows Auto Layout to expand the cell height
+        // CRITICAL: This allows the cell to grow.
         notesTextView.isScrollEnabled = false
         notesTextView.textContainerInset = .zero
         notesTextView.textContainer.lineFragmentPadding = 0
     }
     
+    // MARK: - Placeholder Logic
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.text == placeholderText {
             textView.text = nil
-            textView.textColor = UIColor.label
+            textView.textColor = UIColor.label // Black in light mode
         }
     }
     
@@ -135,7 +130,9 @@ class NotesCardCell: UITableViewCell, UITextViewDelegate {
         }
     }
     
+    // MARK: - Resize Logic
     func textViewDidChange(_ textView: UITextView) {
+        // Tell the Controller to resize the table row
         delegate?.didUpdateText(in: self)
     }
 }

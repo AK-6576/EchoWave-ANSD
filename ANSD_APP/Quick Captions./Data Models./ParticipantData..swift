@@ -8,7 +8,7 @@
 import Foundation
 
 struct ParticipantData {
+    var name: String     // Stores "Speaker 1", "Bucky", etc.
     let initials: String
-    // Changed to 'var' so we can update it when typing in the text field
-    var summary: String
+    var summary: String  // Stores the full sentence "Bucky is a cab driver..."
 }

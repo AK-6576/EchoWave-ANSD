@@ -130,27 +130,60 @@ class QuickCaptioningViewController: UIViewController, UICollectionViewDelegate,
     
     @IBAction func didTapStopButton(_ sender: UIButton) {
         if !isPaused { togglePauseState() }
-        
-        let actionSheet = UIAlertController(title: "End Session?", message: "Are you sure?", preferredStyle: .actionSheet)
-        
-        let endAction = UIAlertAction(title: "End Session", style: .destructive) { _ in
-            
-            // --- LINK TO SUMMARY ---
-            let storyboard = UIStoryboard(name: "Quick Captions", bundle: nil)
-            
-            // Ensure ID 'SummaryNavController' is on the Navigation Controller
-            if let summaryNav = storyboard.instantiateViewController(withIdentifier: "SummaryNavController") as? UINavigationController {
-                summaryNav.modalPresentationStyle = .fullScreen
-                summaryNav.modalTransitionStyle = .crossDissolve
-                self.present(summaryNav, animated: true, completion: nil)
-            }
+                
+        let actionSheet = UIAlertController(title: "End Session?", message: "Are you sure?", preferredStyle: .alert)
+                
+                let endAction = UIAlertAction(title: "End Session", style: .destructive) { _ in
+                    
+                    // 1. Instantiate the Navigation Controller
+                    let storyboard = UIStoryboard(name: "Quick Captions", bundle: nil) // Check if storyboard name is "Main" or "Quick Captions"
+                    
+                    if let summaryNav = storyboard.instantiateViewController(withIdentifier: "SummaryNavController") as? UINavigationController {
+                        
+                        // 2. FIND THE SUMMARY VC (It's the first child of the Nav Controller)
+                        if let summaryVC = summaryNav.viewControllers.first as? SummaryViewController {
+                            
+                            // 3. GET THE NAME
+                            let passedName = self.otherPersonName
+                            
+                            // 4. CREATE UPDATED DATA
+                            // We put 'passedName' into the Name field AND the Summary String
+                            let updatedData: [ParticipantData] = [
+                                ParticipantData(
+                                    name: passedName,
+                                    initials: String(passedName.prefix(2)).uppercased(), // Simple initials logic
+                                    summary: "\(passedName) is a cab driver who inquired about whether he should drop Steve at the gate or under a particular building."
+                                ),
+                                ParticipantData(
+                                    name: "Steve",
+                                    initials: "SP",
+                                    summary: "Steve mentioned that the gate would be fine and gave the access code 1322 5669 and mentioned the building as C4."
+                                )
+                            ]
+                            
+                            // 5. INJECT DATA INTO SUMMARY VC
+                            summaryVC.participantsData = updatedData
+                        }
+                        
+                        // 6. Present
+                        summaryNav.modalPresentationStyle = .fullScreen
+                        summaryNav.modalTransitionStyle = .crossDissolve
+                        self.present(summaryNav, animated: true, completion: nil)
+                    }
+                }
+                
+                actionSheet.addAction(endAction)
+                actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                
+                // iPad Fix
+                if let popover = actionSheet.popoverPresentationController {
+                    popover.sourceView = sender
+                    popover.sourceRect = sender.bounds
+                }
+                
+                self.present(actionSheet, animated: true)
         }
-        
-        actionSheet.addAction(endAction)
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        
-        self.present(actionSheet, animated: true)
-    }
+
     
     // MARK: - Layout Helpers
     func scrollToBottom() {

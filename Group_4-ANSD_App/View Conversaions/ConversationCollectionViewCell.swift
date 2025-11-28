@@ -30,5 +30,26 @@ class ConversationCollectionViewCell: UICollectionViewCell {
             containerView.layer.shadowRadius = 6
             containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
         }
+    func configure(with conversation: Conversation) {
+            
+            // 1. Set the primary text fields
+            self.titleLabel.text = conversation.title
+            self.descriptionLabel.text = conversation.description
+            
+            // 2. Automate the Category Label
+            let categoryString = conversation.category
+            
+            // Capitalize the first letter (e.g., "office" -> "Office")
+            let capitalizedCategory = categoryString.prefix(1).uppercased() + categoryString.dropFirst()
+            
+            self.categoryLabel.text = capitalizedCategory
+            
+            // Note: You can also automate the category icon here if needed
+            // self.categoryIcon.image = UIImage(named: conversation.icon)
+            
+            // Set Date and Time (example)
+            self.dateLabel.text = conversation.date
+        self.timeLabel.text = "\(conversation.startTime) - \(conversation.startTime)"
+        }
    
 }

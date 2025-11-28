@@ -9,6 +9,6 @@ import Foundation
 
 struct ParticipantData {
     let initials: String
-    let summary: String
-    // You can add 'color' or 'name' here later if needed
+    // Changed to 'var' so we can update it when typing in the text field
+    var summary: String
 }

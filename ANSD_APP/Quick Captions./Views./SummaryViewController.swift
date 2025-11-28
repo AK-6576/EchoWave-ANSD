@@ -7,11 +7,11 @@
 
 import UIKit
 
-class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NotesCardCellDelegate {
+class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NotesCardCellDelegate, SummaryCardDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     
-    // MARK: - 1. Data Source (Using the Struct)
+    // MARK: - Data Source
     var participantsData: [ParticipantData] = [
         ParticipantData(
             initials: "SP",
@@ -19,7 +19,7 @@ class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewD
         ),
         ParticipantData(
             initials: "SP",
-            summary: "Steve mentioned that the gate would be fine and gave the access code 1322 5669 and mentioned the building as C4. He paid 124 Bucks for his ride, ending his journey."
+            summary: "Steve mentioned that the gate would be fine and gave the access code 1322 5669 and mentioned the building as C4."
         )
     ]
 
@@ -34,7 +34,6 @@ class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
         
-        // Auto Layout for dynamic cell heights
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 120
         
@@ -57,16 +56,12 @@ class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
 
     // MARK: - Table View Data Source
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 6
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Section 3 is the Participants List -> Uses array count
-        if section == 3 {
-            return participantsData.count
-        }
+        if section == 3 { return participantsData.count }
         return 1
     }
     
@@ -74,40 +69,38 @@ class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         switch indexPath.section {
             
-        // --- CONVERSATION SUMMARY ---
-        case 0: // Header
+        // --- 1. CONVERSATION ---
+        case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "SummarySectionHeaderCell", for: indexPath) as! SummarySectionHeaderCell
             cell.headerLabel.text = "Conversation Summary"
             cell.headerIcon.image = UIImage(systemName: "list.bullet.clipboard")
             return cell
             
-        case 1: // Card
+        case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "SummaryCardCell", for: indexPath) as! SummaryCardCell
-            cell.titleLabel.text = "Conversation 1"
+            // CRITICAL: Set the delegate so the cell can talk to this controller
+            cell.delegate = self
             return cell
             
-        // --- PARTICIPANTS SUMMARY ---
-        case 2: // Header
+        // --- 2. PARTICIPANTS ---
+        case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ParticipantsSummaryHeaderCell", for: indexPath) as! ParticipantsSummaryHeaderCell
-
-            cell.participantLabel.text = "Participants Summary"
             return cell
             
-        case 3: // Dynamic Cards
+        case 3:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ParticipantsCardCell", for: indexPath) as! ParticipantCardCell
             let data = participantsData[indexPath.row]
             cell.configure(with: data)
             return cell
             
-        // --- NOTES ---
-        case 4: // Header
-            // Reusing the generic header but changing text/icon
+        // --- 3. NOTES ---
+        case 4:
             let cell = tableView.dequeueReusableCell(withIdentifier: "SummarySectionHeaderCell", for: indexPath) as! SummarySectionHeaderCell
             cell.headerLabel.text = "Notes"
             cell.headerIcon.image = UIImage(systemName: "note.text")
             return cell
             
-        case 5: // Interactive Card
+        case 5:
             let cell = tableView.dequeueReusableCell(withIdentifier: "NotesCardCell", for: indexPath) as! NotesCardCell
             cell.delegate = self
             return cell
@@ -117,14 +110,34 @@ class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    // MARK: - NotesCardCellDelegate
-    // This keeps the keyboard open and animates the cell growing
+    // MARK: - Logic 1: Handle Note Resizing
     func didUpdateText(in cell: NotesCardCell) {
         tableView.performBatchUpdates(nil, completion: nil)
-        
-        // Scroll slightly to keep cursor visible
         if let indexPath = tableView.indexPath(for: cell) {
             tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
         }
+    }
+    
+    // MARK: - Logic 2: Handle Name Change (Real-Time)
+    func didChangeName(text: String) {
+        // Safety check
+        guard !participantsData.isEmpty else { return }
+        
+        // 1. Logic: If you type "John", we update the first person's summary
+        var firstPerson = participantsData[0]
+        
+        let name = text.isEmpty ? "Speaker 1" : text
+        
+        // Update the string. (This is just an example logic, you can customize the sentence)
+        firstPerson.summary = "\(name) is a cab driver who inquired about whether he should drop Steve at the gate..."
+        
+        // 2. Save to array
+        participantsData[0] = firstPerson
+        
+        // 3. Reload ONLY the first Participant Card to see the change instantly
+        let indexPath = IndexPath(row: 0, section: 3)
+        
+        // Using 'none' animation prevents the keyboard from jumping/closing
+        tableView.reloadRows(at: [indexPath], with: .none)
     }
 }

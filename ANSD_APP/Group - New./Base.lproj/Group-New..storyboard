@@ -37,7 +37,7 @@
             </objects>
             <point key="canvasLocation" x="257.25190839694653" y="112.67605633802818"/>
         </scene>
-        <!--New Conversation-->
+        <!--Quick Captioning-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController keyboardType="off" id="BYZ-38-t0r" customClass="QuickCaptioningViewController" customModule="ANSD_APP" customModuleProvider="target" sceneMemberID="viewController">
@@ -257,7 +257,7 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="PIP-LZ-TBZ" secondAttribute="trailing" constant="16" id="mCQ-xC-2Lf"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="New Conversation" id="BLF-mM-Ziw"/>
+                    <navigationItem key="navigationItem" title="Quick Captioning" id="BLF-mM-Ziw"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="collectionView" destination="lj2-nh-zb8" id="zTe-cx-4Sx"/>
@@ -401,7 +401,7 @@
                                                                                 <constraint firstAttribute="height" constant="16" id="crP-Ne-kro"/>
                                                                             </constraints>
                                                                         </imageView>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Staten Island - Queens" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8sE-HH-ZO8">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="121 Bleecker Street" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8sE-HH-ZO8">
                                                                             <rect key="frame" x="24" y="0.0" width="297" height="19.333333333333332"/>
                                                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                             <nil key="textColor"/>

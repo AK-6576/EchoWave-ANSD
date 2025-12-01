@@ -14,10 +14,10 @@ class QRCodeViewController: UIViewController {
     @IBOutlet weak var qrImageView: UIImageView!
     @IBOutlet weak var shareLinkButton: UIButton!
     
-    // Data Variables
+    // Data passed in
     var inviteCode: String = ""
     
-    // A "Trigger" function to notify the previous screen when we leave
+    // Callback to tell parent "I am finished"
     var onDismiss: (() -> Void)?
     
     // MARK: - Lifecycle
@@ -30,7 +30,7 @@ class QRCodeViewController: UIViewController {
     func setupUI() {
         view.backgroundColor = .systemBackground
         
-        // Style the button
+        // Button Styling
         shareLinkButton.layer.cornerRadius = 25
         shareLinkButton.backgroundColor = .black
         shareLinkButton.setTitleColor(.white, for: .normal)
@@ -40,11 +40,12 @@ class QRCodeViewController: UIViewController {
     func generateAndShowQR() {
         let context = CIContext()
         let filter = CIFilter.qrCodeGenerator()
-        let data = inviteCode.data(using: .ascii)
         
+        // Create Data
+        let data = inviteCode.data(using: .ascii)
         filter.setValue(data, forKey: "inputMessage")
         
-        // Scale up (QR codes are tiny by default, we make it crisp)
+        // Scale Up
         let transform = CGAffineTransform(scaleX: 10, y: 10)
         
         if let output = filter.outputImage?.transformed(by: transform) {
@@ -56,16 +57,15 @@ class QRCodeViewController: UIViewController {
 
     // MARK: - Actions
     
-    // 1. Share Link Button (Inside the QR Screen)
+    // "Share Link" inside the QR Screen
     @IBAction func shareLinkTapped(_ sender: Any) {
         let textToShare = "Join my Quick Caption conversation! Code: \(inviteCode)"
         
         let activityVC = UIActivityViewController(activityItems: [textToShare], applicationActivities: nil)
         
-        // When this internal share sheet closes, we dismiss the QR screen too
+        // When sharing finishes, dismiss QR screen -> which triggers onDismiss -> which opens Chat
         activityVC.completionWithItemsHandler = { _, _, _, _ in
             self.dismiss(animated: true) {
-                // Tell parent to start the chat
                 self.onDismiss?()
             }
         }
@@ -73,21 +73,11 @@ class QRCodeViewController: UIViewController {
         present(activityVC, animated: true)
     }
     
-    // 2. Cancel / Close Button (If you added an X button)
-    // If you don't have a button and just swipe down,
-    // we need to handle viewWillDisappear to be safe,
-    // but typically a button is better for flow control.
-    @IBAction func closeTapped(_ sender: Any) {
-        dismiss(animated: true) {
-            self.onDismiss?()
-        }
-    }
-    
-    // 3. Handle Swipe Down dismissal
+    // Handle Swipe Down Dismissal
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        // If the view is gone, trigger the callback
-        // (This covers the swipe-down gesture)
+        
+        // If the view was dragged down to close, we still want to go to the chat
         if isBeingDismissed {
             onDismiss?()
         }

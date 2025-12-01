@@ -14,38 +14,43 @@ class NewButtonViewController: UIViewController {
     }
     
     // MARK: - Actions
+    
+    // Connect this to your "New Conversation" Button
     @IBAction func newConversationTapped(_ sender: UIButton) {
         showInviteMenu()
     }
 
-    // MARK: - Navigation Logic
+    // MARK: - Navigation Logic (The Bridge)
     func navigateToChat() {
+        // Ensure "Main" matches your Storyboard filename
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
+        // Ensure "GroupNewViewController" matches the Storyboard ID of your Chat Screen
         if let chatVC = storyboard.instantiateViewController(withIdentifier: "GroupNewViewController") as? GroupNewViewController {
+            
             chatVC.modalPresentationStyle = .fullScreen
             chatVC.modalTransitionStyle = .crossDissolve
-            self.present(chatVC, animated: true)
+            
+            self.present(chatVC, animated: true, completion: nil)
         }
     }
 
-    // MARK: - The Menu (iPhone Style Bottom Sheet)
+    // MARK: - The Menu (Action Sheet)
     func showInviteMenu() {
         
-        // Style .actionSheet automatically slides from bottom on iPhone
         let actionSheet = UIAlertController(title: "Start New Conversation", message: "Choose an invite method", preferredStyle: .actionSheet)
 
-        // Option A: Share Link
+        // OPTION A: Share Link (Triggers AirDrop/System Share)
         let shareAction = UIAlertAction(title: "Share Invite Link", style: .default) { _ in
             self.shareSystemLink()
         }
         
-        // Option B: Show QR Code
+        // OPTION B: Show QR Code (Triggers Custom Screen)
         let qrAction = UIAlertAction(title: "Show QR Code", style: .default) { _ in
             self.showQRCodeScreen()
         }
 
-        // Option C: Cancel
+        // OPTION C: Cancel
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
 
         actionSheet.addAction(shareAction)
@@ -55,35 +60,39 @@ class NewButtonViewController: UIViewController {
         present(actionSheet, animated: true)
     }
     
-    // MARK: - Helper 1: System Share
+    // MARK: - Helper 1: The "AirDrop Thing"
     func shareSystemLink() {
+        // 1. Prepare Content
         let code = "QC-\(UUID().uuidString.prefix(6))"
-        let text = "Join my Quick Caption conversation! Code: \(code)"
+        let textToShare = "Join my Quick Caption conversation! Code: \(code)"
         
-        let activityVC = UIActivityViewController(activityItems: [text], applicationActivities: nil)
+        // 2. Open System Share Sheet
+        let activityVC = UIActivityViewController(activityItems: [textToShare], applicationActivities: nil)
         
-        // Go to chat when done
+        // 3. Navigate to Chat when done
         activityVC.completionWithItemsHandler = { _, _, _, _ in
+            // This runs when the user closes the share sheet or finishes sharing
             self.navigateToChat()
         }
         
         present(activityVC, animated: true)
     }
     
-    // MARK: - Helper 2: QR Code Screen
+    // MARK: - Helper 2: The QR Code Screen
     func showQRCodeScreen() {
-        let storyboard = UIStoryboard(name: "Group-New.", bundle: nil)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
+        // Ensure "QRCodeViewController" matches the Storyboard ID of your QR Screen
         if let qrVC = storyboard.instantiateViewController(withIdentifier: "QRCodeViewController") as? QRCodeViewController {
             
             qrVC.inviteCode = "QC-\(UUID().uuidString.prefix(6))"
             
-            // Callback: Go to chat when QR screen closes
+            // Callback: When QR screen closes, go to Chat
             qrVC.onDismiss = { [weak self] in
                 self?.navigateToChat()
             }
             
-            // Present as Page Sheet (Standard iPhone Card)
+            // Show as a Card (iPhone style)
             qrVC.modalPresentationStyle = .pageSheet
             if let sheet = qrVC.sheetPresentationController {
                 sheet.detents = [.medium(), .large()]

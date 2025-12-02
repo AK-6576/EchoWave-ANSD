@@ -1,5 +1,5 @@
 //
-//  QuickCaptioningViewController.swift
+//  GroupNewViewController.swift
 //  Quick Captioning
 //
 //  Created by Anshul Kumaria on 25/11/25.
@@ -17,7 +17,7 @@ class GroupNewViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     // MARK: - Variables
     var messages: [ChatMessage] = []
-    let fullConversation = ChatData.fullConversation
+    let fullConversation = ChatData.fullConversation // Ensure ChatData.swift exists
     
     var currentMessageIndex = 0
     var isPaused = false
@@ -105,7 +105,6 @@ class GroupNewViewController: UIViewController, UICollectionViewDelegate, UIColl
                 self.otherPersonName = newName
                 self.collectionView.reloadData()
             }
-            // Auto-resume after saving
             self.togglePauseState()
         }
         
@@ -130,40 +129,32 @@ class GroupNewViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     @IBAction func didTapStopButton(_ sender: UIButton) {
         if !isPaused { togglePauseState() }
-                
+        
         let actionSheet = UIAlertController(title: "End Session?", message: "Are you sure?", preferredStyle: .alert)
+        
+        let endAction = UIAlertAction(title: "End Session", style: .destructive) { _ in
+            
+            let storyboard = UIStoryboard(name: "Group-New.", bundle: nil)
+            
+            if let summaryNav = storyboard.instantiateViewController(withIdentifier: "SummaryNavController") as? UINavigationController {
                 
-                let endAction = UIAlertAction(title: "End Session", style: .destructive) { _ in
-                    
-                    // 1. Instantiate the Navigation Controller
-                    let storyboard = UIStoryboard(name: "Group-New.", bundle: nil) // Check if storyboard name is "Main" or "Quick Captions"
-                    
-                    if let summaryNav = storyboard.instantiateViewController(withIdentifier: "SummaryNavController") as? UINavigationController {
-                        
-                        // 6. Present
-                        summaryNav.modalPresentationStyle = .fullScreen
-                        summaryNav.modalTransitionStyle = .crossDissolve
-                        self.present(summaryNav, animated: true, completion: nil)
-                    }
-                }
-                
-                actionSheet.addAction(endAction)
-                actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-                
-                // iPad Fix
-                if let popover = actionSheet.popoverPresentationController {
-                    popover.sourceView = sender
-                    popover.sourceRect = sender.bounds
-                }
-                
-                self.present(actionSheet, animated: true)
+                summaryNav.modalPresentationStyle = .fullScreen
+                summaryNav.modalTransitionStyle = .crossDissolve
+                self.present(summaryNav, animated: true, completion: nil)
+            }
         }
+        
+        actionSheet.addAction(endAction)
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        self.present(actionSheet, animated: true)
+    }
 
-    
     // MARK: - Layout Helpers
     func scrollToBottom() {
         guard messages.count > 0 else { return }
-        collectionView.scrollToItem(at: IndexPath(item: messages.count - 1, section: 0), at: .bottom, animated: true)
+        let lastItem = IndexPath(item: messages.count - 1, section: 0)
+        self.collectionView.scrollToItem(at: lastItem, at: .bottom, animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -28,35 +28,37 @@ class ParticipantSelectionViewController: UIViewController, UITableViewDelegate,
     
     func setupNavigationBar() {
         // SCENARIO 1: MODAL (Add People Mode)
-        // We need a manual "Cancel" button because there is no Back button.
         if onPeopleAdded != nil {
             self.title = "Add Participants"
+            
+            // Fix 1: Added closeTapped selector
             navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(closeTapped))
         }
         
         // SCENARIO 2: PUSH (New Conversation Mode)
-        // The system provides the "< Back" button automatically. We just need the "Start" button.
         else {
             self.title = "Connect"
-            // No Left Button needed (Back is automatic)
         }
     }
     
     // MARK: - Actions
+    
+    // Fix 3: Added the missing close function
+    @objc func closeTapped() {
+        self.dismiss(animated: true, completion: nil)
+    }
+
     @IBAction func doneTapped(_ sender: Any) {
         // SCENARIO A: We are in "Add Mode" (Modal inside existing chat)
-        if onPeopleAdded != nil {
-            // Just pass data and close.
-            // DO NOT SEGUE (or you get the double chat bug).
+        if let callback = onPeopleAdded {
             let selectedNames = selectedIndices.map { contacts[$0] }
-            onPeopleAdded?(selectedNames)
+            callback(selectedNames)
             self.dismiss(animated: true, completion: nil)
         }
         
         // SCENARIO B: We are in "Start Mode" (Push from Home Screen)
         else {
-            // Trigger the Manual Wire we just created.
-            // This takes you to the chat screen.
+            // Trigger the Manual Wire
             performSegue(withIdentifier: "goToChat", sender: self)
         }
     }

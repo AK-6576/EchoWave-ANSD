@@ -79,7 +79,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Connect" id="gg0-zO-wa0">
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="dVB-WQ-5CE"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="dVB-WQ-5CE">
+                            <connections>
+                                <action selector="doneTapped:" destination="mHA-Uz-Qq8" id="F0k-Rk-wbJ"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="FoG-g9-Kf3" id="fUT-PF-jfk"/>

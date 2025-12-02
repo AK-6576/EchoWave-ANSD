@@ -81,9 +81,23 @@ class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         // Action 2: End Session (Red/Destructive)
         let endAction = UIAction(title: "End Session", image: UIImage(systemName: "xmark.circle"), attributes: .destructive) { [weak self] _ in
-            // Go Home (Dismiss everything)
-            self?.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
-        }
+                    guard let self = self else { return }
+                    
+                    // THE "SNEAKY POP" STRATEGY:
+                    
+                    // 1. Find the Main Navigation Controller (The root of the app)
+                    if let navController = self.view.window?.rootViewController as? UINavigationController {
+                        
+                        // 2. Silently remove "ParticipantSelection" from the back stack.
+                        // We do this WITHOUT animation (false).
+                        // Now, the screen 'behind' the Chat is actually the Home Button screen.
+                        navController.popToRootViewController(animated: false)
+                        
+                        // 3. Dismiss the Chat/Summary Modal.
+                        // When this slides down, the user will see the Home Screen immediately.
+                        navController.dismiss(animated: true, completion: nil)
+                    }
+                }
         
         // Create the Menu
         let menu = UIMenu(title: "", children: [shareAction, endAction])

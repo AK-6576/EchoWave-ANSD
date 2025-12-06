@@ -18,9 +18,7 @@ class NewButtonViewController: UIViewController {
         let storyboard = UIStoryboard(name: "Group-New.", bundle: nil)
         
         if let selectionVC = storyboard.instantiateViewController(withIdentifier: "ParticipantSelectionViewController") as? ParticipantSelectionViewController {
-            
-            // USE PUSH (Native iOS Navigation)
-            // This automatically gives you the "< Back" button in the top left.
+
             self.navigationController?.pushViewController(selectionVC, animated: true)
         }
     }

@@ -1,6 +1,6 @@
 //
 //  GroupNewViewController.swift
-//  Quick Captioning
+//  ANSD_APP
 //
 //  Created by Anshul Kumaria on 25/11/25.
 //
@@ -17,7 +17,7 @@ class GroupNewViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     // MARK: - Variables
     var messages: [ChatMessage] = []
-    let fullConversation = ChatData.fullConversation // Ensure ChatData.swift exists
+    let fullConversation = ChatData.fullConversation
     
     var currentMessageIndex = 0
     var isPaused = false
@@ -167,18 +167,12 @@ class GroupNewViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         if let selectionVC = storyboard.instantiateViewController(withIdentifier: "ParticipantSelectionViewController") as? ParticipantSelectionViewController {
             
-            // 1. TELL IT WHO IS ALREADY HERE
-            // (In a real app, you'd scan your 'messages' array to find names)
-            // For now, let's say "Peter Parker" and "Bruce Banner" are already here
             selectionVC.unavailableContacts = ["Peter Parker", "Bruce Banner"]
             
-            // 2. DEFINE WHAT HAPPENS WHEN THEY CLICK DONE
             selectionVC.onPeopleAdded = { [weak self] newNames in
                 print("User added: \(newNames)")
-                // Here you can insert a system message: "\(newNames) joined the chat."
             }
             
-            // 3. PRESENT WITH NAV BAR (So we get the Title and Buttons)
             let navWrapper = UINavigationController(rootViewController: selectionVC)
             navWrapper.modalPresentationStyle = .pageSheet
             if let sheet = navWrapper.sheetPresentationController {

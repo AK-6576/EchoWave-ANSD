@@ -1,3 +1,10 @@
+//
+//  ParticipantSelectionViewController.swift
+//  ANSD_APP
+//
+//  Created by Anshul Kumaria on 01/12/25.
+//
+
 import UIKit
 
 class ParticipantSelectionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -27,15 +34,12 @@ class ParticipantSelectionViewController: UIViewController, UITableViewDelegate,
     }
     
     func setupNavigationBar() {
-        // SCENARIO 1: MODAL (Add People Mode)
         if onPeopleAdded != nil {
             self.title = "Add Participants"
             
-            // Fix 1: Added closeTapped selector
             navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(closeTapped))
         }
         
-        // SCENARIO 2: PUSH (New Conversation Mode)
         else {
             self.title = "Connect"
         }
@@ -43,22 +47,18 @@ class ParticipantSelectionViewController: UIViewController, UITableViewDelegate,
     
     // MARK: - Actions
     
-    // Fix 3: Added the missing close function
     @objc func closeTapped() {
         self.dismiss(animated: true, completion: nil)
     }
 
     @IBAction func doneTapped(_ sender: Any) {
-        // SCENARIO A: We are in "Add Mode" (Modal inside existing chat)
         if let callback = onPeopleAdded {
             let selectedNames = selectedIndices.map { contacts[$0] }
             callback(selectedNames)
             self.dismiss(animated: true, completion: nil)
         }
         
-        // SCENARIO B: We are in "Start Mode" (Push from Home Screen)
         else {
-            // Trigger the Manual Wire
             performSegue(withIdentifier: "goToChat", sender: self)
         }
     }

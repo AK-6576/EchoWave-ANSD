@@ -1,6 +1,6 @@
 //
 //  SummaryCells.swift
-//  Quick Captioning
+//  ANSD_APP
 //
 //  Created by Anshul Kumaria on 25/11/25.
 //
@@ -45,7 +45,7 @@ class SummaryCardCell: UITableViewCell {
     
     @IBOutlet weak var mainCardView: UIView!
     
-    @IBOutlet weak var titleTextField: UITextField!   // Only Title is editable
+    @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var locationLabel: UILabel!
     
@@ -67,7 +67,7 @@ class ParticipantCardCell: UITableViewCell {
     
     @IBOutlet weak var mainCardView: UIView!
     @IBOutlet weak var avatarImageView: UIImageView!
-    @IBOutlet weak var detailsLabel: UILabel! // Uses a Label to show summary
+    @IBOutlet weak var detailsLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

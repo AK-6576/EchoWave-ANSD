@@ -1,6 +1,6 @@
 //
 //  SummaryViewController.swift
-//  Quick Captioning
+//  ANSD_APP
 //
 //  Created by Anshul Kumaria on 25/11/25.
 //
@@ -12,13 +12,10 @@ class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBOutlet weak var tableView: UITableView!
     
-    // NOTE: Ensure this is connected to your Top Right Bar Button Item
     @IBOutlet weak var optionsButton: UIBarButtonItem!
     
-    // 1. DEFAULT TITLE
     var conversationTitle = "New Conversation"
     
-    // 2. DATA SOURCE
     var participantsData: [ParticipantData] = [
             ParticipantData(
                 name: "Peter Parker",
@@ -47,16 +44,13 @@ class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
         
-        // Auto-sizing row heights
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 120
         
-        // Dismiss keyboard on tap
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
         
-        // CRITICAL: Initialize the Menu
         setupOptionsMenu()
     }
     
@@ -66,7 +60,6 @@ class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // MARK: - Actions
     
-    // CONNECT THIS TO YOUR TOP LEFT "X" BUTTON
     @IBAction func backTapped(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
@@ -74,35 +67,24 @@ class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewD
     // MARK: - The Menu Logic (Top Right)
     func setupOptionsMenu() {
         
-        // Action 1: Share / Export
         let shareAction = UIAction(title: "Share / Export", image: UIImage(systemName: "square.and.arrow.up")) { [weak self] _ in
             self?.showExportPopup()
         }
         
-        // Action 2: End Session (Red/Destructive)
         let endAction = UIAction(title: "End Session", image: UIImage(systemName: "xmark.circle"), attributes: .destructive) { [weak self] _ in
                     guard let self = self else { return }
                     
-                    // THE "SNEAKY POP" STRATEGY:
-                    
-                    // 1. Find the Main Navigation Controller (The root of the app)
+
                     if let navController = self.view.window?.rootViewController as? UINavigationController {
                         
-                        // 2. Silently remove "ParticipantSelection" from the back stack.
-                        // We do this WITHOUT animation (false).
-                        // Now, the screen 'behind' the Chat is actually the Home Button screen.
                         navController.popToRootViewController(animated: false)
                         
-                        // 3. Dismiss the Chat/Summary Modal.
-                        // When this slides down, the user will see the Home Screen immediately.
                         navController.dismiss(animated: true, completion: nil)
                     }
                 }
         
-        // Create the Menu
         let menu = UIMenu(title: "", children: [shareAction, endAction])
         
-        // Attach it to the Bar Button Item
         optionsButton.menu = menu
     }
 
@@ -125,39 +107,34 @@ class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     // MARK: - Logic 1: Share Plain Text
     func shareAsText() {
-        // 1. Compile the text
         var fullText = "Conversation Title: \(conversationTitle)\n\n"
         for person in participantsData {
             fullText += "\(person.name) (\(person.initials)):\n\(person.summary)\n\n"
         }
         
-        // 2. Open Native Share Sheet
         let activityVC = UIActivityViewController(activityItems: [fullText], applicationActivities: nil)
-        activityVC.popoverPresentationController?.sourceView = self.view // iPad fix
+        activityVC.popoverPresentationController?.sourceView = self.view
         self.present(activityVC, animated: true)
     }
     
     // MARK: - Logic 2: Share PDF
     func shareAsPDF() {
-        // 1. Compile the text for the PDF
         var pdfContent = "Conversation Title: \(conversationTitle)\n\n"
         for person in participantsData {
             pdfContent += "\(person.name) (\(person.initials)):\n\(person.summary)\n\n"
         }
         
-        // 2. Generate PDF File
         if let pdfURL = createPDF(from: pdfContent) {
-            // 3. Open Native Share Sheet with the File
             let activityVC = UIActivityViewController(activityItems: [pdfURL], applicationActivities: nil)
-            activityVC.popoverPresentationController?.sourceView = self.view // iPad fix
+            activityVC.popoverPresentationController?.sourceView = self.view
             self.present(activityVC, animated: true)
         }
     }
     
     // MARK: - PDF Generator Helper
     func createPDF(from text: String) -> URL? {
-        let pageWidth = 595.2 // A4 Width
-        let pageHeight = 841.8 // A4 Height
+        let pageWidth = 595.2
+        let pageHeight = 841.8
         let pageRect = CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight)
         
         let renderer = UIGraphicsPDFRenderer(bounds: pageRect)
@@ -241,7 +218,6 @@ class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // MARK: - Delegates
     
-    // Notes Auto-Resize
     func didUpdateText(in cell: NotesCardCell) {
         tableView.performBatchUpdates(nil, completion: nil)
         if let indexPath = tableView.indexPath(for: cell) {
@@ -249,7 +225,6 @@ class SummaryViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    // Title Change
     func didChangeTitle(text: String) {
         conversationTitle = text
     }

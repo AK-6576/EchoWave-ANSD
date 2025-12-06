@@ -1,6 +1,6 @@
 //
 //  QuickCaptioningViewController.swift
-//  Quick Captioning
+//  ANSD_APP
 //
 //  Created by Anshul Kumaria on 25/11/25.
 //
@@ -105,7 +105,6 @@ class QuickCaptioningViewController: UIViewController, UICollectionViewDelegate,
                 self.otherPersonName = newName
                 self.collectionView.reloadData()
             }
-            // Auto-resume after saving
             self.togglePauseState()
         }
         
@@ -134,24 +133,19 @@ class QuickCaptioningViewController: UIViewController, UICollectionViewDelegate,
         let actionSheet = UIAlertController(title: "End Session?", message: "Are you sure?", preferredStyle: .alert)
                 
                 let endAction = UIAlertAction(title: "End Session", style: .destructive) { _ in
-                    
-                    // 1. Instantiate the Navigation Controller
-                    let storyboard = UIStoryboard(name: "Quick Captions", bundle: nil) // Check if storyboard name is "Main" or "Quick Captions"
+
+                    let storyboard = UIStoryboard(name: "Quick Captions", bundle: nil)
                     
                     if let summaryNav = storyboard.instantiateViewController(withIdentifier: "SummaryNavController") as? UINavigationController {
-                        
-                        // 2. FIND THE SUMMARY VC (It's the first child of the Nav Controller)
+
                         if let summaryVC = summaryNav.viewControllers.first as? SummaryViewController {
                             
-                            // 3. GET THE NAME
                             let passedName = self.otherPersonName
-                            
-                            // 4. CREATE UPDATED DATA
-                            // We put 'passedName' into the Name field AND the Summary String
+
                             let updatedData: [ParticipantData] = [
                                 ParticipantData(
                                     name: passedName,
-                                    initials: String(passedName.prefix(2)).uppercased(), // Simple initials logic
+                                    initials: String(passedName.prefix(2)).uppercased(),
                                     summary: "\(passedName) is a cab driver who inquired about whether he should drop Steve at the gate or under a particular building."
                                 ),
                                 ParticipantData(
@@ -161,11 +155,9 @@ class QuickCaptioningViewController: UIViewController, UICollectionViewDelegate,
                                 )
                             ]
                             
-                            // 5. INJECT DATA INTO SUMMARY VC
                             summaryVC.participantsData = updatedData
                         }
                         
-                        // 6. Present
                         summaryNav.modalPresentationStyle = .fullScreen
                         summaryNav.modalTransitionStyle = .crossDissolve
                         self.present(summaryNav, animated: true, completion: nil)
@@ -175,7 +167,6 @@ class QuickCaptioningViewController: UIViewController, UICollectionViewDelegate,
                 actionSheet.addAction(endAction)
                 actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
                 
-                // iPad Fix
                 if let popover = actionSheet.popoverPresentationController {
                     popover.sourceView = sender
                     popover.sourceRect = sender.bounds

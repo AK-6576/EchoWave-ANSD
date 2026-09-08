@@ -8,6 +8,8 @@
 
 ## 1. Summary & Core Privacy Principles
 
+Sāmwaad is built so that your voice stays on your device wherever possible.
+
 * **On-Device Audio Processing:** Your voice audio captured during live transcription and speaker calibration is processed locally on your device in memory. We **never** stream, record, or upload raw audio files to any external cloud servers.
 * **On-Device Machine Learning:** Speaker diarization uses a local CoreML model (`VL1004`) to compute anonymous voice embeddings directly on Apple Neural Engine / GPU hardware.
 * **Client-Side Encryption (CSE):** All shared group session metadata and transcripts synced to our cloud database (Firebase Realtime Database) are encrypted end-to-end on your device using AES-GCM-256 before transmission.
@@ -77,5 +79,6 @@ Sāmwaad does not knowingly collect or solicit personal information from childre
 If you have questions, feedback, or data privacy requests, please contact our team:
 
 * **Project Team:** MIT-WPU Group 4 (ANSD Accessibility Initiative)
+* **Website:** [samwaad-app.netlify.app](https://samwaad-app.netlify.app/)
 * **Email:** support.samwaad@gmail.com
 * **GitHub Repository:** [https://github.com/MITWPU-Group04](https://github.com/MITWPU-Group04)

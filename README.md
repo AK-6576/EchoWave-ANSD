@@ -5,7 +5,8 @@
 <h1 align="center">Sāmwaad</h1>
 
 <p align="center">
-  <b>Real-Time Speech Captioning & Speaker Identification for iOS</b>
+  <b>Real-Time Speech Captioning & Speaker Identification for iOS</b><br>
+  <i>Sāmwaad turns spoken conversation into live, readable captions with on-device speaker context.</i>
 </p>
 
 <p align="center">
@@ -298,8 +299,9 @@ The diarization pipeline:
 
 This project is developed for academic purposes at **MIT-WPU**. All rights reserved © 2025 MIT-WPU Group 4.
 
-- 🔒 **Privacy Policy:** [PRIVACY.md](PRIVACY.md)
-- 💬 **Support & Help:** [SUPPORT.md](SUPPORT.md)
+- 🌐 **Website:** [samwaad-app.netlify.app](https://samwaad-app.netlify.app/)
+- 🔒 **Privacy Policy:** [Online](https://samwaad-app.netlify.app/privacy-policy) | [Local](PRIVACY.md)
+- 💬 **Support & Help:** [Online](https://samwaad-app.netlify.app/support) | [Local](SUPPORT.md)
 - 📧 **Contact Email:** support.samwaad@gmail.com
 
 ---
